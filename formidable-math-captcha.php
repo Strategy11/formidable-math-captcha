@@ -23,7 +23,7 @@ function frm_load_cptch_hooks(){
 
 add_action('plugins_loaded', 'frm_cpt_load_lang');
 function frm_cpt_load_lang(){
-    load_plugin_textdomain('cptch', false, 'formidable-math-captcha/languages/' );
+    load_plugin_textdomain('cptch', false, dirname(__FILE__) .'/languages/' );
 }
 
 add_action('admin_init', 'frm_cpt_include_updater', 1);
