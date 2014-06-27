@@ -2,7 +2,7 @@
 /*
 Plugin Name: Formidable Math Captcha
 Description: Extends Captcha by BestWebSoft to work with Formidable 
-Version: 1.09.03
+Version: 1.09.04
 Plugin URI: http://formidablepro.com/
 Author URI: http://strategy11.com
 Author: Strategy11
@@ -142,7 +142,7 @@ function frm_add_cptch_field($form, $action, $errors=''){
     unset($opt);
     
 	// captcha html
-	echo '<div id="frm_field_cptch_number_container" class="form-field  frm_top_container">';
+	echo '<div id="frm_field_cptch_number_container" class="form-field frm_top_container auto_width">';
 	if( '' != $cptch_options['cptch_label_form'] )	
 		echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'] .'</label>';
 
