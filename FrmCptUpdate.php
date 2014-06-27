@@ -14,7 +14,7 @@ class FrmCptUpdate{
         
         // Where all the vitals are defined for this plugin
         $this->plugin_nicename      = 'formidable-math-captcha';
-        $this->plugin_name          = dirname(__FILE__) .'/formidable-math-captcha.php';
+        $this->plugin_name          = basename(dirname(__FILE__)) .'/formidable-math-captcha.php';
         $this->pro_last_checked_store = 'frmcpt_last_check';
         $this->pro_check_interval = 60*60*24; // Checking every 24 hours
 
