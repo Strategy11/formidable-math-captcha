@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Formidable Math Captcha v1.09\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-22 22:04+0100\n"
+"PO-Revision-Date: 2013-11-15 19:39:38+0000\n"
+"Last-Translator: Amadeusz Majerczyk <kubamajer@op.pl>\n"
+"Language-Team: Kuba Majerczyk <kubamajer@op.pl>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-Language: \n"
+"X-Poedit-Country: \n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: formidable-math-captcha.php:68
+#: formidable-math-captcha.php:106
+#@ cptch
+msgid "You are missing the BWS Captcha plugin"
+msgstr "Nie zainstalowano wtyczki BWS Captcha"
+
+#: formidable-math-captcha.php:166
+#@ cptch
+msgid "Please complete the CAPTCHA."
+msgstr "Proszę uzupełnić to pole"
+
+#: formidable-math-captcha.php:172
+#@ cptch
+msgid "That CAPTCHA was incorrect."
+msgstr "Wpisano nieprawidłową wartość."
+
+#: formidable-math-captcha.php:71
+#@ cptch
+msgid "Do not include the math captcha with this form."
+msgstr ""
+
