@@ -142,9 +142,11 @@ function frm_add_cptch_field($form, $action, $errors=''){
     unset($opt);
     
 	// captcha html
-	echo '<div id="frm_field_cptch_number_container" class="form-field frm_top_container auto_width">';
-	if( '' != $cptch_options['cptch_label_form'] )	
-		echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'] .'</label>';
+    $classes = apply_filters('frm_cpt_field_classes', array('form-field', 'frm_top_container', 'auto_width'), $form);
+	echo '<div id="frm_field_cptch_number_container" class="'. implode(' ', $classes) .'">';
+	unset($classes);
+	
+	echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'] .'</label>';
 
     if ( function_exists('cptch_display_captcha') ) {
 	    cptch_display_captcha();
