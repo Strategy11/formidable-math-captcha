@@ -146,7 +146,9 @@ function frm_add_cptch_field($form, $action, $errors=''){
 	echo '<div id="frm_field_cptch_number_container" class="'. implode(' ', $classes) .'">';
 	unset($classes);
 	
-	echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'] .'</label>';
+	if ( !empty($cptch_options['cptch_label_form']) ) {
+	    echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'] .'</label>';
+	}
 
     if ( function_exists('cptch_display_captcha') ) {
 	    cptch_display_captcha();
