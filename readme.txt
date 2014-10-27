@@ -1,3 +1,6 @@
+= 1.09.04 =
+* Use the new Captcha hooks for adding the checkbox in the settings
+
 = 1.09.03 =
 * Update for Captcha Pro compatibility
 
