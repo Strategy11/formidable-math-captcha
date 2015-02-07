@@ -143,6 +143,9 @@ function frm_add_cptch_field($form, $action, $errors=''){
     
 	// captcha html
     $classes = apply_filters('frm_cpt_field_classes', array('form-field', 'frm_top_container', 'auto_width'), $form);
+    if ( is_array($errors) && isset($errors['cptch_number']) ) {
+        $classes[] = 'frm_blank_field';
+    }
 	echo '<div id="frm_field_cptch_number_container" class="'. implode(' ', $classes) .'">';
 	unset($classes);
 	
