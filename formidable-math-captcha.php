@@ -65,6 +65,22 @@ function frm_add_cptch_opt(){
     }
 }
 
+// for Captcha v4.0.5+
+add_filter('cptchpr_display_captcha_custom', 'frm_cptch_add_option'); // add to pro version
+add_filter('cptch_forms_list', 'frm_cptch_add_option'); // add to free version
+function frm_cptch_add_option($options){
+    remove_action('admin_footer', 'frm_add_cptch_check');
+
+    $cptch_options = get_option( 'cptch_options' );
+    $checked = ( isset($cptch_options['cptch_frm_form']) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
+
+    $options .= '<label>';
+    $options .= '<input type="checkbox" name="cptch_frm_form" value="cptch_frm_form" '. $checked .' />';
+    $options .= ' Formidable form</label><br/>';
+
+    return $options;
+}
+
 add_action('admin_footer', 'frm_add_cptch_check');
 // for Captcha v3.9.8+
 function frm_add_cptch_check(){
