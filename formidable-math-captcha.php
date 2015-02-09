@@ -166,7 +166,9 @@ function frm_add_cptch_field($form, $action, $errors=''){
 	unset($classes);
 	
 	if ( !empty($cptch_options['cptch_label_form']) ) {
-	    echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'] .'</label>';
+	    echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'];
+        echo ' <span class="frm_required">'. $cptch_options['cptch_required_symbol'] .'</span>';
+        echo '</label>';
 	}
 
     if ( function_exists('cptch_display_captcha') ) {
