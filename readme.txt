@@ -1,5 +1,10 @@
-= 1.09.04 =
+= 1.10 =
 * Use the new Captcha hooks for adding the checkbox in the settings
+* Prevent Formidable no-conflict styling from forcing a long field
+* Added the error class for the label and input box so they will have the same error styling as other fields in the form
+* Show required indicator with the label
+* Added frm_cpt_field_classes hook for adding field container classes
+* Added Catalan translation
 
 = 1.09.03 =
 * Update for Captcha Pro compatibility

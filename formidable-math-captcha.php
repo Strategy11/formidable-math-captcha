@@ -2,7 +2,7 @@
 /*
 Plugin Name: Formidable Math Captcha
 Description: Extends Captcha by BestWebSoft to work with Formidable 
-Version: 1.09.04
+Version: 1.10
 Plugin URI: http://formidablepro.com/
 Author URI: http://strategy11.com
 Author: Strategy11
