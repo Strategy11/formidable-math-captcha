@@ -44,14 +44,14 @@ class FrmCptController {
 
 
 	public static function include_updater() {
-		include_once( dirname(__FILE__) . '/FrmCptUpdate.php' );
+		include_once( dirname( __FILE__ ) . '/FrmCptUpdate.php' );
 		new FrmCptUpdate();
 	}
 
 
 	public static function add_cptch_opt() {
 
-		if ( ! isset( $_GET ) || ! isset( $_GET['page'] ) || $_GET['page'] != 'captcha.php' ) {
+		if ( ! isset( $_GET ) || ! isset( $_GET['page'] ) || sanitize_title( $_GET['page'] ) != 'captcha.php' ) {
 			return;
 		}
 
@@ -97,7 +97,7 @@ class FrmCptController {
 
 	// for Captcha v3.9.8+
 	public static function add_cptch_check() {
-		if ( ! $_GET || ! isset( $_GET['page'] ) || $_GET['page'] != 'captcha.php' ) {
+		if ( ! $_GET || ! isset( $_GET['page'] ) || sanitize_title( $_GET['page'] ) != 'captcha.php' ) {
 			return;
 		}
 
@@ -108,7 +108,7 @@ class FrmCptController {
 		}
 
 		$cptch_options = get_option( 'cptch_options' );
-		$checked = ( isset( $cptch_options['cptch_frm_form']) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
+		$checked = ( isset( $cptch_options['cptch_frm_form'] ) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
 ?>
 <script type="text/javascript">
 jQuery(document).ready(function($){
@@ -121,13 +121,13 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	public static function add_cptch_form_opt( $values ) { ?>
 <tr><td colspan="2">
 <?php
-	if ( ! function_exists('cptch_display_captcha') && ! function_exists('cptchpr_display_captcha') ) {
-		echo '<p>' . __( 'You are missing the BWS Captcha plugin', 'cptch' ) . '</p>';
-	} else {
-		$opt = (array) get_option( 'frm_cptch' ); ?>
-<label for="frm_cptch"><input type="checkbox" value="1" id="frm_cptch" name="frm_cptch" <?php echo in_array( $values['id'], $opt ) ? 'checked="checked"' : ''; ?> /> <?php _e( 'Do not include the math captcha with this form.', 'cptch' ) ?></label>
+		if ( ! function_exists( 'cptch_display_captcha' ) && ! function_exists( 'cptchpr_display_captcha' ) ) {
+			echo '<p>' . esc_html( __( 'You are missing the BWS Captcha plugin', 'cptch' ) ) . '</p>';
+		} else {
+			$opt = (array) get_option( 'frm_cptch' ); ?>
+<label for="frm_cptch"><input type="checkbox" value="1" id="frm_cptch" name="frm_cptch" <?php echo in_array( $values['id'], $opt ) ? 'checked="checked"' : ''; ?> /> <?php echo esc_html( __( 'Do not include the math captcha with this form.', 'cptch' ) ) ?></label>
 <?php
-} ?>
+		} ?>
 </td></tr>
 <?php
 	}
@@ -158,7 +158,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		}
 
 		//skip if there are more pages for this form
-		if ( ( is_array( $errors ) && ! isset( $errors['cptch_number'] ) ) || ( is_array( $frm_vars ) && isset( $frm_vars['next_page']) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) ) {
+		if ( ( is_array( $errors ) && ! isset( $errors['cptch_number'] ) ) || ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) ) {
 			return;
 		}
 
@@ -176,16 +176,16 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		unset( $opt );
 
 		// captcha html
-		$classes = apply_filters( 'frm_cpt_field_classes', array('form-field', 'frm_top_container', 'auto_width'), $form );
+		$classes = apply_filters( 'frm_cpt_field_classes', array('form-field', 'frm_top_container', 'auto_width' ), $form );
 		if ( is_array( $errors ) && isset( $errors['cptch_number'] ) ) {
 			$classes[] = 'frm_blank_field';
 		}
-		echo '<div id="frm_field_cptch_number_container" class="' . implode( ' ', $classes ) . '">';
+		echo '<div id="frm_field_cptch_number_container" class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 		unset( $classes );
 
 		if ( ! empty( $cptch_options['cptch_label_form'] ) ) {
-			echo '<label class="frm_primary_label">' . $cptch_options['cptch_label_form'];
-			echo ' <span class="frm_required">' . $cptch_options['cptch_required_symbol'] . '</span>';
+			echo '<label class="frm_primary_label">' . wp_kses_post( $cptch_options['cptch_label_form'] );
+			echo ' <span class="frm_required">' . wp_kses_post( $cptch_options['cptch_required_symbol'] ) . '</span>';
 			echo '</label>';
 		}
 
@@ -203,7 +203,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		}
 
 		if ( is_array( $errors ) && isset( $errors['cptch_number'] ) ) {
-			echo '<div class="frm_error">' . $errors['cptch_number'] . '</div>';
+			echo '<div class="frm_error">' . esc_html( $errors['cptch_number'] ) . '</div>';
 		}
 
 		echo '</div>';
@@ -241,26 +241,30 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 
 	  	if ( ! isset( $cptch_options['cptch_str_key'] ) ) {
 			global $str_key;
-			$str_key = get_option('frmcpt_str_key');
+			$str_key = get_option( 'frmcpt_str_key' );
 		} else {
 			$str_key = $cptch_options['cptch_str_key']['key'];
 		}
 
+		$result = isset( $_POST['cptch_result'] ) ? sanitize_text_field( $_POST['cptch_result'] ) : '';
+		$number = sanitize_text_field( $_POST['cptch_number'] );
+		$time = isset( $_REQUEST['cptch_time'] ) ? sanitize_text_field( $_REQUEST['cptch_time'] ) : null;
+
 	  	// If captcha not complete, return error
-	  	if ( $_POST['cptch_number'] == '' ) {
+	  	if ( $number == '' ) {
 	  		$errors['cptch_number'] = __( 'Please complete the CAPTCHA.', 'cptch' );
 		}
 
 		if ( function_exists( 'cptch_decode' ) ) {
-			$decoded = cptch_decode( $_POST['cptch_result'], $str_key, ( isset( $_REQUEST['cptch_time'] ) ? $_REQUEST['cptch_time'] : null ) );
+			$decoded = cptch_decode( $result, $str_key, $time );
 		} else if ( function_exists( 'decode' ) ) {
-			$decoded = decode( $_POST['cptch_result'], $str_key, ( isset( $_REQUEST['cptch_time'] ) ? $_REQUEST['cptch_time'] : null) );
+			$decoded = decode( $result, $str_key, $time );
 		} else {
 			// we don't know how to check it, so don't
 			return $errors;
 		}
 
-	  	if ( ! isset( $_POST['cptch_result'] ) || 0 !== strcasecmp( trim( $decoded ), $_POST['cptch_number'] ) ) {
+	  	if ( 0 !== strcasecmp( trim( $decoded ), $number ) ) {
 	  		// captcha was not matched
 	  		$errors['cptch_number'] = __( 'That CAPTCHA was incorrect.', 'cptch' );
 	  	}
