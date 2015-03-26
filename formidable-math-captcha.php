@@ -12,7 +12,7 @@ Text Domain: cptch
 new FrmCptController();
 
 class FrmCptController {
-	function __construct() {
+	public function __construct() {
 		add_action( 'init', 'FrmCptController::load_hooks' );
 		add_action( 'admin_init', 'FrmCptController::include_updater', 1 );
 		add_action( 'plugins_loaded', 'FrmCptController::load_lang' );
@@ -32,26 +32,26 @@ class FrmCptController {
 
 		// Add captcha into Formidable form
 		if ( isset( $cptch_options['cptch_frm_form'] ) && $cptch_options['cptch_frm_form'] ) {
-			add_action('frm_entry_form', 'FrmCptController::add_cptch_field', 150, 3);
-			add_filter('frm_validate_entry', 'FrmCptController::check_cptch_post', 10, 2 );
+			add_action( 'frm_entry_form', 'FrmCptController::add_cptch_field', 150, 3 );
+			add_filter( 'frm_validate_entry', 'FrmCptController::check_cptch_post', 10, 2 );
 		}
 	}
 
 
 	public static function load_lang() {
-		load_plugin_textdomain( 'cptch', false, basename( dirname( __FILE__ ) ) .'/languages/' );
+		load_plugin_textdomain( 'cptch', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 
 
 	public static function include_updater() {
-		include_once( dirname(__FILE__) .'/FrmCptUpdate.php' );
+		include_once( dirname(__FILE__) . '/FrmCptUpdate.php' );
 		new FrmCptUpdate();
 	}
 
 
 	public static function add_cptch_opt() {
 
-		if ( ! isset($_GET) || ! isset($_GET['page']) || $_GET['page'] != 'captcha.php' ) {
+		if ( ! isset( $_GET ) || ! isset( $_GET['page'] ) || $_GET['page'] != 'captcha.php' ) {
 			return;
 		}
 
@@ -86,10 +86,10 @@ class FrmCptController {
 		remove_action( 'admin_footer', 'FrmCptController::add_cptch_check' );
 
 		$cptch_options = get_option( 'cptch_options' );
-		$checked = ( isset($cptch_options['cptch_frm_form']) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
+		$checked = ( isset( $cptch_options['cptch_frm_form'] ) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
 
 		$options .= '<label>';
-		$options .= '<input type="checkbox" name="cptch_frm_form" value="cptch_frm_form" '. $checked .' />';
+		$options .= '<input type="checkbox" name="cptch_frm_form" value="cptch_frm_form" ' . $checked . ' />';
 		$options .= ' Formidable form</label><br/>';
 
 		return $options;
@@ -108,7 +108,7 @@ class FrmCptController {
 		}
 
 		$cptch_options = get_option( 'cptch_options' );
-		$checked = ( isset($cptch_options['cptch_frm_form']) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
+		$checked = ( isset( $cptch_options['cptch_frm_form']) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
 ?>
 <script type="text/javascript">
 jQuery(document).ready(function($){
@@ -122,7 +122,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 <tr><td colspan="2">
 <?php
 	if ( ! function_exists('cptch_display_captcha') && ! function_exists('cptchpr_display_captcha') ) {
-		echo '<p>'. __( 'You are missing the BWS Captcha plugin', 'cptch' ) .'</p>';
+		echo '<p>' . __( 'You are missing the BWS Captcha plugin', 'cptch' ) . '</p>';
 	} else {
 		$opt = (array) get_option( 'frm_cptch' ); ?>
 <label for="frm_cptch"><input type="checkbox" value="1" id="frm_cptch" name="frm_cptch" <?php echo in_array( $values['id'], $opt ) ? 'checked="checked"' : ''; ?> /> <?php _e( 'Do not include the math captcha with this form.', 'cptch' ) ?></label>
@@ -134,7 +134,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 
 	public static function update_cptch_form_options( $options, $values ) {
 		$opt = (array) get_option( 'frm_cptch' );
-		if ( isset($values['frm_cptch']) && ( ! isset( $values['id'] ) || ! in_array( $values['id'], $opt ) ) ) {
+		if ( isset( $values['frm_cptch'] ) && ( ! isset( $values['id'] ) || ! in_array( $values['id'], $opt ) ) ) {
 			$opt[] = $values['id'];
 			update_option( 'frm_cptch', $opt );
 		} else if ( ! isset( $values['frm_cptch'] ) && isset( $values['id'] ) && in_array( $values['id'], $opt ) ) {
@@ -153,7 +153,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		global $cptch_options, $frm_next_page, $frm_vars;
 
 		// skip captcha if user is logged in and the settings allow
-		if ( ( is_admin() && ! defined('DOING_AJAX') ) || ( is_user_logged_in() && 1 == $cptch_options['cptch_hide_register'] ) ) {
+		if ( self::skip_captcha() ) {
 			return;
 		}
 
@@ -162,7 +162,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 			return;
 		}
 
-		if ( ! function_exists('cptch_display_captcha') && ! function_exists('cptchpr_display_captcha') ) {
+		if ( ! function_exists( 'cptch_display_captcha' ) && ! function_exists( 'cptchpr_display_captcha' ) ) {
 			_e( 'You are missing the BWS Captcha plugin', 'cptch' );
 			return;
 		}
@@ -170,7 +170,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		$opt = get_option( 'frm_cptch' );
 		if ( $opt && in_array( $form->id, (array) $opt ) ) {
 			// insert a nonce field instead of the captcha for later validation
-			wp_nonce_field('frmcptch-nonce', 'frmcptch');
+			wp_nonce_field( 'frmcptch-nonce', 'frmcptch' );
 			return;
 		}
 		unset( $opt );
@@ -180,12 +180,12 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		if ( is_array( $errors ) && isset( $errors['cptch_number'] ) ) {
 			$classes[] = 'frm_blank_field';
 		}
-		echo '<div id="frm_field_cptch_number_container" class="'. implode(' ', $classes) .'">';
+		echo '<div id="frm_field_cptch_number_container" class="' . implode( ' ', $classes ) . '">';
 		unset( $classes );
 
 		if ( ! empty( $cptch_options['cptch_label_form'] ) ) {
-			echo '<label class="frm_primary_label">'. $cptch_options['cptch_label_form'];
-			echo ' <span class="frm_required">'. $cptch_options['cptch_required_symbol'] .'</span>';
+			echo '<label class="frm_primary_label">' . $cptch_options['cptch_label_form'];
+			echo ' <span class="frm_required">' . $cptch_options['cptch_required_symbol'] . '</span>';
 			echo '</label>';
 		}
 
@@ -202,8 +202,8 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 			update_option( 'frmcpt_str_key', $str_key );
 		}
 
-		if ( is_array($errors) && isset( $errors['cptch_number'] ) ) {
-			echo '<div class="frm_error">'. $errors['cptch_number'] .'</div>';
+		if ( is_array( $errors ) && isset( $errors['cptch_number'] ) ) {
+			echo '<div class="frm_error">' . $errors['cptch_number'] . '</div>';
 		}
 
 		echo '</div>';
@@ -213,7 +213,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		global $cptch_options;
 
 		// skip captcha if user is logged in and the settings allow
-		if ( ( is_admin() && ! defined('DOING_AJAX') ) || ( is_user_logged_in() && 1 == $cptch_options['cptch_hide_register'] ) ) {
+		if ( self::skip_captcha() ) {
 			return $errors;
 		}
 
@@ -266,5 +266,16 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	  	}
 
 		return $errors;
+	}
+
+	/**
+	 * Skip the captcha if we are on the back-end,
+	 * or if logged-in users don't need to see it
+	 *
+	 * @return bool
+	 */
+	private static function skip_captcha() {
+		global $cptch_options;
+		return ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_user_logged_in() && 1 == $cptch_options['cptch_hide_register'] );
 	}
 }
