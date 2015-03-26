@@ -159,9 +159,10 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		$cptch_error = ( ! empty( $errors ) && isset( $errors['cptch_number'] ) );
 
 		//skip if there are more pages for this form
-		$more_pages = ( ! $cptch_error || ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) );
+		$more_pages = ( $cptch_error || ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) );
 
 		if ( $more_pages ) {
+			echo 'more';
 			return;
 		}
 
@@ -191,8 +192,6 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	 * The HTML for the captcha
 	 */
 	private static function show_cptch_field( $form, $errors, $cptch_error ) {
-		global $cptch_options;
-
 		// captcha html
 		$classes = apply_filters( 'frm_cpt_field_classes', array( 'form-field', 'frm_top_container', 'auto_width' ), $form );
 		if ( $cptch_error ) {
@@ -200,6 +199,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		}
 		echo '<div id="frm_field_cptch_number_container" class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
+		global $cptch_options;
 		if ( ! empty( $cptch_options['cptch_label_form'] ) ) {
 			echo '<label class="frm_primary_label">' . wp_kses_post( $cptch_options['cptch_label_form'] );
 			echo ' <span class="frm_required">' . wp_kses_post( $cptch_options['cptch_required_symbol'] ) . '</span>';
@@ -222,66 +222,97 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	}
 
 	public static function check_cptch_post( $errors, $values ) {
-		global $cptch_options;
-
-		// skip captcha if user is logged in and the settings allow
-		if ( self::skip_captcha() ) {
+		$check = true;
+		if ( self::maybe_check_errors( $check, $values ) ) {
 			return $errors;
 		}
 
-		//don't require if editing
-		$action_var = isset( $_REQUEST['frm_action'] ) ? 'frm_action' : 'action';
-	  	if ( isset( $values[ $action_var ] ) && $values[ $action_var ] == 'update' ) {
-	  		return $errors;
-		}
-	  	unset( $action_var );
+		$number = isset( $_POST['cptch_number'] ) ? sanitize_text_field( $_POST['cptch_number'] ) : false;
 
-	  	//don't require if not on the last page
-		global $frm_next_page, $frm_vars;
-		if ( ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $values['form_id'] ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $values['form_id'] ] ) ) ) {
-			return $errors;
-		}
-
-	  	//if the captcha wasn't incuded on the page
-		if ( ! isset( $_POST['cptch_number'] ) ) {
+		//if the captcha wasn't incuded on the page
+		if ( $number === false ) {
 			// if captcha is turned off for this form, there will be a nonce instead
-			if ( ! isset( $_REQUEST['frmcptch'] ) || ! wp_verify_nonce( $_REQUEST['frmcptch'], 'frmcptch-nonce' ) ) {
+			if ( ! isset( $_REQUEST['frmcptch'] ) || ! wp_verify_nonce( sanitize_text_field( $_REQUEST['frmcptch'] ), 'frmcptch-nonce' ) ) {
 				$errors['cptch_number'] = __( 'The captcha is missing from your form.', 'cptch' );
 			}
 			return $errors;
 		}
 
-	  	if ( ! isset( $cptch_options['cptch_str_key'] ) ) {
-			global $str_key;
-			$str_key = get_option( 'frmcpt_str_key' );
-		} else {
-			$str_key = $cptch_options['cptch_str_key']['key'];
+		if ( $number == '' ) {
+			// If captcha not complete, return error
+			$errors['cptch_number'] = __( 'Please complete the CAPTCHA.', 'cptch' );
+		} else if ( ! self::is_cptch_correct( $number ) ) {
+			// captcha was not matched
+			$errors['cptch_number'] = __( 'That CAPTCHA was incorrect.', 'cptch' );
 		}
 
+		return $errors;
+	}
+
+	/**
+	 * Don't check the captcha if editing or if there are more pages in the form.
+	 */
+	private static function maybe_check_errors( &$check, $values ) {
+		// skip captcha if user is logged in and the settings allow
+		if ( self::skip_captcha() ) {
+			$check = false;
+			return;
+		}
+
+		//don't require if editing
+		$action_var = isset( $_REQUEST['frm_action'] ) ? 'frm_action' : 'action';
+		$editing = ( isset( $values[ $action_var ] ) && $values[ $action_var ] == 'update' );
+		if ( $editing ) {
+			$check = false;
+			return;
+		}
+		unset( $action_var, $editing );
+
+		//don't require if not on the last page
+		global $frm_next_page, $frm_vars;
+		$more_pages = ( ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $values['form_id'] ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $values['form_id'] ] ) ) );
+		if ( $more_pages ) {
+			$check = false;
+		}
+	}
+
+	/**
+	 * Check the value of the captcha
+	 * @return bool True if correct, false if incorrect
+	 */
+	private static function is_cptch_correct( $number ) {
 		$result = isset( $_POST['cptch_result'] ) ? sanitize_text_field( $_POST['cptch_result'] ) : '';
-		$number = sanitize_text_field( $_POST['cptch_number'] );
 		$time = isset( $_REQUEST['cptch_time'] ) ? sanitize_text_field( $_REQUEST['cptch_time'] ) : null;
 
-	  	// If captcha not complete, return error
-	  	if ( $number == '' ) {
-	  		$errors['cptch_number'] = __( 'Please complete the CAPTCHA.', 'cptch' );
-		}
-
+		$str_key = self::get_compare_key();
 		if ( function_exists( 'cptch_decode' ) ) {
 			$decoded = cptch_decode( $result, $str_key, $time );
 		} else if ( function_exists( 'decode' ) ) {
 			$decoded = decode( $result, $str_key, $time );
 		} else {
 			// we don't know how to check it, so don't
-			return $errors;
+			return true;
 		}
 
-	  	if ( 0 !== strcasecmp( trim( $decoded ), $number ) ) {
-	  		// captcha was not matched
-	  		$errors['cptch_number'] = __( 'That CAPTCHA was incorrect.', 'cptch' );
-	  	}
+		return ( 0 == strcasecmp( trim( $decoded ), $number ) );
+	}
 
-		return $errors;
+	/**
+	 * The key in the captcha plugin changes regular to help prevent spam.
+	 * We need to make sure we're comparing against the correct key, or the result will be wrong.
+	 *
+	 * @return string
+	 */
+	private static function get_compare_key() {
+		global $cptch_options;
+
+		if ( ! isset( $cptch_options['cptch_str_key'] ) ) {
+			global $str_key;
+			$str_key = get_option( 'frmcpt_str_key' );
+		} else {
+			$str_key = $cptch_options['cptch_str_key']['key'];
+		}
+		return $str_key;
 	}
 
 	/**
