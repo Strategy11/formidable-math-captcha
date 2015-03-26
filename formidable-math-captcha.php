@@ -120,7 +120,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	public static function add_cptch_form_opt( $values ) { ?>
 <tr><td colspan="2">
 <?php
-		if ( ! function_exists( 'cptch_display_captcha' ) && ! function_exists( 'cptchpr_display_captcha' ) ) {
+		if ( ! self::is_cptch_installed() ) {
 			echo '<p>' . esc_html( __( 'You are missing the BWS Captcha plugin', 'cptch' ) ) . '</p>';
 		} else {
 			$opt = (array) get_option( 'frm_cptch' ); ?>
@@ -154,19 +154,16 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 			return;
 		}
 
-		global $frm_next_page, $frm_vars;
-
 		$cptch_error = ( ! empty( $errors ) && isset( $errors['cptch_number'] ) );
 
 		//skip if there are more pages for this form
-		$more_pages = ( $cptch_error || ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) );
-
-		if ( $more_pages ) {
-			echo 'more';
+		$more_pages = self::more_form_pages( $form->id );
+		if ( $cptch_error || $more_pages ) {
+			wp_nonce_field( 'frmcptch-nonce', 'frmcptch' );
 			return;
 		}
 
-		if ( ! function_exists( 'cptch_display_captcha' ) && ! function_exists( 'cptchpr_display_captcha' ) ) {
+		if ( ! self::is_cptch_installed() ) {
 			_e( 'You are missing the BWS Captcha plugin', 'cptch' );
 			return;
 		}
@@ -222,8 +219,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	}
 
 	public static function check_cptch_post( $errors, $values ) {
-		$check = true;
-		if ( self::maybe_check_errors( $check, $values ) ) {
+		if ( self::maybe_check_errors( $values ) ) {
 			return $errors;
 		}
 
@@ -232,13 +228,11 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		//if the captcha wasn't incuded on the page
 		if ( $number === false ) {
 			// if captcha is turned off for this form, there will be a nonce instead
-			if ( ! isset( $_REQUEST['frmcptch'] ) || ! wp_verify_nonce( sanitize_text_field( $_REQUEST['frmcptch'] ), 'frmcptch-nonce' ) ) {
+			$check_nonce = ( isset( $_REQUEST['frmcptch'] ) && wp_verify_nonce( sanitize_text_field( $_REQUEST['frmcptch'] ), 'frmcptch-nonce' ) );
+			if ( ! $check_nonce ) {
 				$errors['cptch_number'] = __( 'The captcha is missing from your form.', 'cptch' );
 			}
-			return $errors;
-		}
-
-		if ( $number == '' ) {
+		} else if ( $number == '' ) {
 			// If captcha not complete, return error
 			$errors['cptch_number'] = __( 'Please complete the CAPTCHA.', 'cptch' );
 		} else if ( ! self::is_cptch_correct( $number ) ) {
@@ -251,29 +245,36 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 
 	/**
 	 * Don't check the captcha if editing or if there are more pages in the form.
+	 * @return bool true if captcha should be checked
 	 */
-	private static function maybe_check_errors( &$check, $values ) {
+	private static function maybe_check_errors( $values ) {
 		// skip captcha if user is logged in and the settings allow
 		if ( self::skip_captcha() ) {
-			$check = false;
-			return;
+			return false;
 		}
 
 		//don't require if editing
 		$action_var = isset( $_REQUEST['frm_action'] ) ? 'frm_action' : 'action';
 		$editing = ( isset( $values[ $action_var ] ) && $values[ $action_var ] == 'update' );
 		if ( $editing ) {
-			$check = false;
-			return;
+			return false;
 		}
 		unset( $action_var, $editing );
 
 		//don't require if not on the last page
-		global $frm_next_page, $frm_vars;
-		$more_pages = ( ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $values['form_id'] ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $values['form_id'] ] ) ) );
+		$more_pages = self::more_form_pages( $values['form_id'] );
 		if ( $more_pages ) {
-			$check = false;
+			return false;
 		}
+	}
+
+	/**
+	 * Check if there are more pages in this form
+	 * @return bool
+	 */
+	private static function more_form_pages( $form_id ) {
+		global $frm_vars, $frm_next_page;
+		return ( ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form_id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form_id ] ) ) );
 	}
 
 	/**
@@ -332,5 +333,13 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	 */
 	private static function is_captcha_page() {
 		return ( $_GET && isset( $_GET['page'] ) && sanitize_title( $_GET['page'] ) == 'captcha.php' );
+	}
+
+	/**
+	 * Check if the BWS captcha is installed
+	 * @return bool true if the plugin is installed
+	 */
+	private static function is_cptch_installed() {
+		return ( function_exists( 'cptch_display_captcha' ) || function_exists( 'cptchpr_display_captcha' ) );
 	}
 }
