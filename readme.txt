@@ -1,4 +1,4 @@
-= 1.10.01 =
+= 1.11 =
 * Move code into class
 * Codestyling cleanup
 * Add a nonce field if the captcha is not included on a form so that can be checked instead

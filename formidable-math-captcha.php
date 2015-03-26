@@ -2,7 +2,7 @@
 /*
 Plugin Name: Formidable Math Captcha
 Description: Extends Captcha by BestWebSoft to work with Formidable
-Version: 1.10.01
+Version: 1.11
 Plugin URI: http://formidablepro.com/
 Author URI: http://strategy11.com
 Author: Strategy11
@@ -16,8 +16,7 @@ class FrmCptController {
 		add_action( 'init', 'FrmCptController::load_hooks' );
 		add_action( 'admin_init', 'FrmCptController::include_updater', 1 );
 		add_action( 'plugins_loaded', 'FrmCptController::load_lang' );
-		add_action( 'admin_head', 'FrmCptController::add_cptch_opt' );
-		add_action( 'admin_footer', 'FrmCptController::add_cptch_check' );
+		add_action( 'admin_head', 'FrmCptController::save_cptch_opt' );
 
 		// for Captcha v4.0.5+
 		add_filter( 'cptchpr_display_captcha_custom', 'FrmCptController::add_option' ); // add to pro version
@@ -37,7 +36,6 @@ class FrmCptController {
 		}
 	}
 
-
 	public static function load_lang() {
 		load_plugin_textdomain( 'cptch', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
@@ -47,21 +45,19 @@ class FrmCptController {
 		new FrmCptUpdate();
 	}
 
-	public static function add_cptch_opt() {
+	/**
+	 * Checks if this is the captcha settings page, and if the settings need to be saved
+	 * Called on the admin_head hook.
+	 */
+	public static function save_cptch_opt() {
 		if ( ! self::is_captcha_page() ) {
 			return;
-		}
-
-		// for Captcha < v3.9.8
-		global $cptch_admin_fields_enable;
-		if ( $cptch_admin_fields_enable ) {
-			$cptch_admin_fields_enable[] = array( 'cptch_frm_form', 'Formidable form', 'Formidable form' );
 		}
 
 		//save captcha
 		if ( isset( $_REQUEST['cptch_form_submit'] ) ) {
 			global $cptch_options;
-			$frm_form = isset( $_REQUEST['cptch_frm_form'] ) ? 1 : 0;
+			$frm_form = isset( $_REQUEST['cptch_frm_form'] );
 			if ( $cptch_options ) {
 				$cptch_options['cptch_frm_form'] = $frm_form;
 			} else {
@@ -70,18 +66,19 @@ class FrmCptController {
 				$cptch_options = update_option( 'cptch_options', $cptch_options ); // save options
 			}
 		} else {
+			// insert the default setting for the Formidable checkbox
 			$cptch_options = get_option( 'cptch_options' ); // get options from the database
 			if ( ! isset( $cptch_options['cptch_frm_form'] ) || $cptch_options['cptch_frm_form'] == '' ) {
 				$cptch_options['cptch_frm_form'] = 0;
-
 				$cptch_options = update_option( 'cptch_options', $cptch_options ); // save options
 			}
 		}
 	}
 
+	/**
+	 * Add the Formidable checkbox option in captcha v4.0.5+ settings
+	 */
 	public static function add_option( $options ) {
-		remove_action( 'admin_footer', 'FrmCptController::add_cptch_check' );
-
 		$cptch_options = get_option( 'cptch_options' );
 		$checked = ( isset( $cptch_options['cptch_frm_form'] ) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
 
@@ -90,31 +87,6 @@ class FrmCptController {
 		$options .= ' Formidable form</label><br/>';
 
 		return $options;
-	}
-
-	/**
-	 * for Captcha v3.9.8+
-	 */
-	public static function add_cptch_check() {
-		if ( ! self::is_captcha_page() ) {
-			return;
-		}
-
-		global $cptch_admin_fields_enable;
-		if ( $cptch_admin_fields_enable ) {
-			// if this global is used, then the checkbox has already been added (Captcha < v3.9.8)
-			return;
-		}
-
-		$cptch_options = get_option( 'cptch_options' );
-		$checked = ( isset( $cptch_options['cptch_frm_form'] ) && $cptch_options['cptch_frm_form'] != '' ) ? 'checked="checked"' : '';
-?>
-<script type="text/javascript">
-jQuery(document).ready(function($){
-$('input[name="cptch_comments_form"]').closest('label').after('<br/><label><input type="checkbox" name="cptch_frm_form" value="cptch_frm_form" <?php echo $checked ?> /> Formidable form</label>');
-});
-</script>
-<?php
 	}
 
 	/**
@@ -347,7 +319,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	 * @return bool
 	 */
 	private static function is_captcha_page() {
-		return ( $_GET && isset( $_GET['page'] ) && sanitize_title( $_GET['page'] ) == 'captcha.php' );
+		return ( $_GET && isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'captcha.php' );
 	}
 
 	/**
