@@ -50,8 +50,7 @@ class FrmCptController {
 
 
 	public static function add_cptch_opt() {
-
-		if ( ! isset( $_GET ) || ! isset( $_GET['page'] ) || sanitize_title( $_GET['page'] ) != 'captcha.php' ) {
+		if ( ! self::is_captcha_page() ) {
 			return;
 		}
 
@@ -97,7 +96,7 @@ class FrmCptController {
 
 	// for Captcha v3.9.8+
 	public static function add_cptch_check() {
-		if ( ! $_GET || ! isset( $_GET['page'] ) || sanitize_title( $_GET['page'] ) != 'captcha.php' ) {
+		if ( ! self::is_captcha_page() ) {
 			return;
 		}
 
@@ -149,16 +148,20 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	/**
 	 * Insert captcha
 	 */
-	public static function add_cptch_field( $form, $action, $errors = '' ) {
-		global $cptch_options, $frm_next_page, $frm_vars;
-
+	public static function add_cptch_field( $form, $action, $errors = array() ) {
 		// skip captcha if user is logged in and the settings allow
 		if ( self::skip_captcha() ) {
 			return;
 		}
 
+		global $frm_next_page, $frm_vars;
+
+		$cptch_error = ( ! empty( $errors ) && isset( $errors['cptch_number'] ) );
+
 		//skip if there are more pages for this form
-		if ( ( is_array( $errors ) && ! isset( $errors['cptch_number'] ) ) || ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) ) {
+		$more_pages = ( ! $cptch_error || ( is_array( $frm_vars ) && isset( $frm_vars['next_page'] ) && isset( $frm_vars['next_page'][ $form->id ] ) ) || ( is_array( $frm_next_page ) && isset( $frm_next_page[ $form->id ] ) ) );
+
+		if ( $more_pages ) {
 			return;
 		}
 
@@ -175,13 +178,27 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		}
 		unset( $opt );
 
+		self::show_cptch_field( $form, $errors, $cptch_error );
+
+		global $cptch_options;
+		if ( ! isset( $cptch_options['cptch_str_key'] ) ) {
+			global $str_key;
+			update_option( 'frmcpt_str_key', $str_key );
+		}
+	}
+
+	/**
+	 * The HTML for the captcha
+	 */
+	private static function show_cptch_field( $form, $errors, $cptch_error ) {
+		global $cptch_options;
+
 		// captcha html
-		$classes = apply_filters( 'frm_cpt_field_classes', array('form-field', 'frm_top_container', 'auto_width' ), $form );
-		if ( is_array( $errors ) && isset( $errors['cptch_number'] ) ) {
+		$classes = apply_filters( 'frm_cpt_field_classes', array( 'form-field', 'frm_top_container', 'auto_width' ), $form );
+		if ( $cptch_error ) {
 			$classes[] = 'frm_blank_field';
 		}
 		echo '<div id="frm_field_cptch_number_container" class="' . esc_attr( implode( ' ', $classes ) ) . '">';
-		unset( $classes );
 
 		if ( ! empty( $cptch_options['cptch_label_form'] ) ) {
 			echo '<label class="frm_primary_label">' . wp_kses_post( $cptch_options['cptch_label_form'] );
@@ -197,12 +214,7 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 			return;
 		}
 
-		if ( ! isset( $cptch_options['cptch_str_key'] ) ) {
-			global $str_key;
-			update_option( 'frmcpt_str_key', $str_key );
-		}
-
-		if ( is_array( $errors ) && isset( $errors['cptch_number'] ) ) {
+		if ( $cptch_error ) {
 			echo '<div class="frm_error">' . esc_html( $errors['cptch_number'] ) . '</div>';
 		}
 
@@ -281,5 +293,13 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 	private static function skip_captcha() {
 		global $cptch_options;
 		return ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_user_logged_in() && 1 == $cptch_options['cptch_hide_register'] );
+	}
+
+	/**
+	 * Check if we are on the captcha settings page in the admin
+	 * @return bool
+	 */
+	private static function is_captcha_page() {
+		return ( $_GET && isset( $_GET['page'] ) && sanitize_title( $_GET['page'] ) == 'captcha.php' );
 	}
 }
