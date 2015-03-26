@@ -22,27 +22,27 @@ msgstr ""
 
 #: formidable-math-captcha.php:125
 #: formidable-math-captcha.php:166
-#@ cptch
+#@ frmcptch
 msgid "You are missing the BWS Captcha plugin"
 msgstr ""
 
 #: formidable-math-captcha.php:251
-#@ cptch
+#@ frmcptch
 msgid "Please complete the CAPTCHA."
 msgstr ""
 
 #: formidable-math-captcha.php:265
-#@ cptch
+#@ frmcptch
 msgid "That CAPTCHA was incorrect."
 msgstr ""
 
 #: formidable-math-captcha.php:128
-#@ cptch
+#@ frmcptch
 msgid "Do not include the math captcha with this form."
 msgstr ""
 
 #: formidable-math-captcha.php:237
-#@ cptch
+#@ frmcptch
 msgid "The captcha is missing from your form."
 msgstr ""
 

@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Formidable Math Captcha
-Description: Extends Captcha by BestWebSoft to work with Formidable
+Description: Extends Captcha by BestWebSoft to work with Formidable Forms
 Version: 1.11
 Plugin URI: http://formidablepro.com/
 Author URI: http://strategy11.com
 Author: Strategy11
-Text Domain: cptch
+Text Domain: frmcptch
 */
 
 new FrmCptController();
@@ -27,17 +27,13 @@ class FrmCptController {
 	}
 
 	public static function load_hooks() {
-		$cptch_options = get_option( 'cptch_options' ); // get the options from the database
-
 		// Add captcha into Formidable form
-		if ( isset( $cptch_options['cptch_frm_form'] ) && $cptch_options['cptch_frm_form'] ) {
-			add_action( 'frm_entry_form', 'FrmCptController::add_cptch_field', 150, 3 );
-			add_filter( 'frm_validate_entry', 'FrmCptController::check_cptch_post', 10, 2 );
-		}
+		add_action( 'frm_entry_form', 'FrmCptController::add_cptch_field', 150, 3 );
+		add_filter( 'frm_validate_entry', 'FrmCptController::check_cptch_post', 10, 2 );
 	}
 
 	public static function load_lang() {
-		load_plugin_textdomain( 'cptch', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'frmcptch', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 
 	public static function include_updater() {
@@ -96,10 +92,10 @@ class FrmCptController {
 	<tr><td colspan="2">
 		<?php
 		if ( ! self::is_cptch_installed() ) {
-			echo '<p>' . esc_html( __( 'You are missing the BWS Captcha plugin', 'cptch' ) ) . '</p>';
+			echo '<p>' . esc_html( __( 'You are missing the BWS Captcha plugin', 'frmcptch' ) ) . '</p>';
 		} else {
 			$opt = (array) get_option( 'frm_cptch' ); ?>
-<label for="frm_cptch"><input type="checkbox" value="1" id="frm_cptch" name="frm_cptch" <?php echo in_array( $values['id'], $opt ) ? 'checked="checked"' : ''; ?> /> <?php echo esc_html( __( 'Do not include the math captcha with this form.', 'cptch' ) ) ?></label>
+<label for="frm_cptch"><input type="checkbox" value="1" id="frm_cptch" name="frm_cptch" <?php echo in_array( $values['id'], $opt ) ? 'checked="checked"' : ''; ?> /> <?php echo esc_html( __( 'Do not include the math captcha with this form.', 'frmcptch' ) ) ?></label>
 		<?php
 		}
 		?>
@@ -140,7 +136,7 @@ class FrmCptController {
 		}
 
 		if ( ! self::is_cptch_installed() ) {
-			_e( 'You are missing the BWS Captcha plugin', 'cptch' );
+			_e( 'You are missing the BWS Captcha plugin', 'frmcptch' );
 			return;
 		}
 
@@ -199,7 +195,7 @@ class FrmCptController {
 	}
 
 	public static function check_cptch_post( $errors, $values ) {
-		if ( self::maybe_check_errors( $values ) ) {
+		if ( ! self::maybe_check_errors( $values ) ) {
 			return $errors;
 		}
 
@@ -210,14 +206,14 @@ class FrmCptController {
 			// if captcha is turned off for this form, there will be a nonce instead
 			$check_nonce = ( isset( $_REQUEST['frmcptch'] ) && wp_verify_nonce( sanitize_text_field( $_REQUEST['frmcptch'] ), 'frmcptch-nonce' ) );
 			if ( ! $check_nonce ) {
-				$errors['cptch_number'] = __( 'The captcha is missing from your form.', 'cptch' );
+				$errors['cptch_number'] = __( 'The captcha is missing from your form.', 'frmcptch' );
 			}
 		} else if ( $number == '' ) {
 			// If captcha not complete, return error
-			$errors['cptch_number'] = __( 'Please complete the CAPTCHA.', 'cptch' );
+			$errors['cptch_number'] = __( 'Please complete the CAPTCHA.', 'frmcptch' );
 		} else if ( ! self::is_cptch_correct( $number ) ) {
 			// captcha was not matched
-			$errors['cptch_number'] = __( 'That CAPTCHA was incorrect.', 'cptch' );
+			$errors['cptch_number'] = __( 'That CAPTCHA was incorrect.', 'frmcptch' );
 		}
 
 		return $errors;
@@ -305,13 +301,13 @@ class FrmCptController {
 
 	/**
 	 * Skip the captcha if we are on the back-end,
-	 * or if logged-in users don't need to see it
+	 * if logged-in users don't need to see it, or if it's not turned on in the Captcha settings
 	 *
 	 * @return bool
 	 */
 	private static function skip_captcha() {
 		global $cptch_options;
-		return ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_user_logged_in() && 1 == $cptch_options['cptch_hide_register'] );
+		return ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_user_logged_in() && 1 == $cptch_options['cptch_hide_register'] ) || ( ! isset( $cptch_options['cptch_frm_form'] ) || ! $cptch_options['cptch_frm_form'] );
 	}
 
 	/**

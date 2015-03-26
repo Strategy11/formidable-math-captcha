@@ -2,6 +2,7 @@
 * Move code into class
 * Codestyling cleanup
 * Add a nonce field if the captcha is not included on a form so that can be checked instead
+* Requires at least v4.0.5 of the Captcha plugin
 
 = 1.10 =
 * Use the new Captcha hooks for adding the checkbox in the settings
