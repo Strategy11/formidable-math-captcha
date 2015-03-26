@@ -42,12 +42,10 @@ class FrmCptController {
 		load_plugin_textdomain( 'cptch', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 
-
 	public static function include_updater() {
 		include_once( dirname( __FILE__ ) . '/FrmCptUpdate.php' );
 		new FrmCptUpdate();
 	}
-
 
 	public static function add_cptch_opt() {
 		if ( ! self::is_captcha_page() ) {
@@ -94,7 +92,9 @@ class FrmCptController {
 		return $options;
 	}
 
-	// for Captcha v3.9.8+
+	/**
+	 * for Captcha v3.9.8+
+	 */
 	public static function add_cptch_check() {
 		if ( ! self::is_captcha_page() ) {
 			return;
@@ -117,18 +117,22 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 <?php
 	}
 
+	/**
+	 * Adds a checkbox in the form settings to allow the captcha to be excluded
+	 */
 	public static function add_cptch_form_opt( $values ) { ?>
-<tr><td colspan="2">
-<?php
+	<tr><td colspan="2">
+		<?php
 		if ( ! self::is_cptch_installed() ) {
 			echo '<p>' . esc_html( __( 'You are missing the BWS Captcha plugin', 'cptch' ) ) . '</p>';
 		} else {
 			$opt = (array) get_option( 'frm_cptch' ); ?>
 <label for="frm_cptch"><input type="checkbox" value="1" id="frm_cptch" name="frm_cptch" <?php echo in_array( $values['id'], $opt ) ? 'checked="checked"' : ''; ?> /> <?php echo esc_html( __( 'Do not include the math captcha with this form.', 'cptch' ) ) ?></label>
-<?php
-		} ?>
-</td></tr>
-<?php
+		<?php
+		}
+		?>
+	</td></tr>
+	<?php
 	}
 
 	public static function update_cptch_form_options( $options, $values ) {
@@ -187,6 +191,10 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 
 	/**
 	 * The HTML for the captcha
+	 *
+	 * @param object $form
+	 * @param array $errors
+	 * @param boolean $cptch_error
 	 */
 	private static function show_cptch_field( $form, $errors, $cptch_error ) {
 		// captcha html
@@ -245,6 +253,8 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 
 	/**
 	 * Don't check the captcha if editing or if there are more pages in the form.
+	 *
+	 * @param array $values the posted values
 	 * @return bool true if captcha should be checked
 	 */
 	private static function maybe_check_errors( $values ) {
@@ -266,10 +276,13 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 		if ( $more_pages ) {
 			return false;
 		}
+
+		return true;
 	}
 
 	/**
 	 * Check if there are more pages in this form
+	 * @param int $form_id
 	 * @return bool
 	 */
 	private static function more_form_pages( $form_id ) {
@@ -279,6 +292,8 @@ $('input[name="cptch_comments_form"]').closest('label').after('<br/><label><inpu
 
 	/**
 	 * Check the value of the captcha
+	 *
+	 * @param string $number
 	 * @return bool True if correct, false if incorrect
 	 */
 	private static function is_cptch_correct( $number ) {
