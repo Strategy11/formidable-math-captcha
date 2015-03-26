@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Math Captcha v1.10.01\n"
+"Project-Id-Version: Formidable Math Captcha v1.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-03-26 20:23:49+0000\n"
+"PO-Revision-Date: 2015-03-26 23:19:32+0000\n"
 "Last-Translator: admin <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,28 +20,28 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: formidable-math-captcha.php:125
-#: formidable-math-captcha.php:166
+#: formidable-math-captcha.php:95
+#: formidable-math-captcha.php:139
 #@ frmcptch
 msgid "You are missing the BWS Captcha plugin"
 msgstr ""
 
-#: formidable-math-captcha.php:251
+#: formidable-math-captcha.php:213
 #@ frmcptch
 msgid "Please complete the CAPTCHA."
 msgstr ""
 
-#: formidable-math-captcha.php:265
+#: formidable-math-captcha.php:216
 #@ frmcptch
 msgid "That CAPTCHA was incorrect."
 msgstr ""
 
-#: formidable-math-captcha.php:128
+#: formidable-math-captcha.php:98
 #@ frmcptch
 msgid "Do not include the math captcha with this form."
 msgstr ""
 
-#: formidable-math-captcha.php:237
+#: formidable-math-captcha.php:209
 #@ frmcptch
 msgid "The captcha is missing from your form."
 msgstr ""
