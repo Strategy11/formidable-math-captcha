@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Math Captcha v1.09\n"
+"Project-Id-Version: Formidable Math Captcha v1.10.01\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-22 22:04+0100\n"
-"PO-Revision-Date: 2013-11-15 19:39:38+0000\n"
+"PO-Revision-Date: 2015-03-26 20:23:56+0000\n"
 "Last-Translator: Amadeusz Majerczyk <kubamajer@op.pl>\n"
 "Language-Team: Kuba Majerczyk <kubamajer@op.pl>\n"
 "MIME-Version: 1.0\n"
@@ -20,24 +20,29 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: formidable-math-captcha.php:68
-#: formidable-math-captcha.php:106
+#: formidable-math-captcha.php:125
+#: formidable-math-captcha.php:166
 #@ cptch
 msgid "You are missing the BWS Captcha plugin"
 msgstr "Nie zainstalowano wtyczki BWS Captcha"
 
-#: formidable-math-captcha.php:166
+#: formidable-math-captcha.php:251
 #@ cptch
 msgid "Please complete the CAPTCHA."
 msgstr "Proszę uzupełnić to pole"
 
-#: formidable-math-captcha.php:172
+#: formidable-math-captcha.php:265
 #@ cptch
 msgid "That CAPTCHA was incorrect."
 msgstr "Wpisano nieprawidłową wartość."
 
-#: formidable-math-captcha.php:71
+#: formidable-math-captcha.php:128
 #@ cptch
 msgid "Do not include the math captcha with this form."
+msgstr ""
+
+#: formidable-math-captcha.php:237
+#@ cptch
+msgid "The captcha is missing from your form."
 msgstr ""
 

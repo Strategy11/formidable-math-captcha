@@ -1,3 +1,8 @@
+= 1.10.01 =
+* Move code into class
+* Codestyling cleanup
+* Add a nonce field if the captcha is not included on a form so that can be checked instead
+
 = 1.10 =
 * Use the new Captcha hooks for adding the checkbox in the settings
 * Prevent Formidable no-conflict styling from forcing a long field
