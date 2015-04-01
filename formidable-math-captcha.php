@@ -240,12 +240,7 @@ class FrmCptController {
 		unset( $action_var, $editing );
 
 		//don't require if not on the last page
-		$more_pages = self::more_form_pages( $values['form_id'] );
-		if ( $more_pages ) {
-			return false;
-		}
-
-		return true;
+		return ! self::more_form_pages( $values['form_id'] );
 	}
 
 	/**
