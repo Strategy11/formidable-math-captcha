@@ -12,8 +12,6 @@ class FrmCptUpdate extends FrmAddon {
 
 	public static function load_hooks() {
 		add_filter( 'frm_include_addon_page', '__return_true' );
-		if ( class_exists( 'FrmAddon' ) ) {
-			new FrmCptUpdate();
-		}
+		new FrmCptUpdate();
 	}
 }
