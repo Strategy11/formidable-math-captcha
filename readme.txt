@@ -1,7 +1,18 @@
+=== Formidable Forms ===
+Requires at least: 3.6
+Requires at least Captcha: 4.0.5
+Tested up to: 4.3
+Stable tag: 1.11
+
+== Changelog ==
 = 1.11 =
+* Get updates from FormidablePros.com
 * Move code into class
 * Codestyling cleanup
 * Add a nonce field if the captcha is not included on a form so that can be checked instead
+* Change text domain to one that is more unique
+* Check the captcha settings after the form is loaded instead of before
+* Fixes for paged forms
 * Requires at least v4.0.5 of the Captcha plugin
 
 = 1.10 =

@@ -38,7 +38,7 @@ class FrmCptController {
 
 	public static function include_updater() {
 		include_once( dirname( __FILE__ ) . '/FrmCptUpdate.php' );
-		new FrmCptUpdate();
+		FrmCptUpdate::load_hooks();
 	}
 
 	/**
