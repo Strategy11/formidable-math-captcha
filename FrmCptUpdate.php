@@ -1,17 +1,34 @@
 <?php
 
-class FrmCptUpdate extends FrmAddon {
-	public $plugin_file;
-	public $plugin_name = 'Math Captcha';
-	public $version = '1.11';
+class FrmCptUpdate{
+    var $plugin_nicename;
+    var $plugin_name;
+    var $pro_check_interval;
+    var $pro_last_checked_store;
+    var $version;
 
-	public function __construct() {
-		$this->plugin_file = dirname( __FILE__ ) . '/formidable-math-captcha.php';
-		parent::__construct();
-	}
+    function __construct(){
+        if ( !class_exists('FrmUpdatesController') ) {
+            return;
+        }
+        
+        // Where all the vitals are defined for this plugin
+        $this->plugin_nicename      = 'formidable-math-captcha';
+        $this->plugin_name          = basename(dirname(__FILE__)) .'/formidable-math-captcha.php';
+        $this->pro_last_checked_store = 'frmcpt_last_check';
+        $this->pro_check_interval = 60*60*24; // Checking every 24 hours
 
-	public static function load_hooks() {
-		add_filter( 'frm_include_addon_page', '__return_true' );
-		new FrmCptUpdate();
-	}
+        add_filter('site_transient_update_plugins', array( &$this, 'queue_update' ) );
+    }
+
+    function queue_update($transient, $force=false){
+        $plugin = $this;
+        global $frm_update;
+        if ( $frm_update ){
+            return $frm_update->queue_addon_update($transient, $plugin, $force);
+        } else {
+            $updates = new FrmUpdatesController();
+            return $updates->queue_addon_update($transient, $plugin, $force);
+        }
+    }
 }
