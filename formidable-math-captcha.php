@@ -38,11 +38,8 @@ class FrmCptController {
 
 	public static function include_updater() {
 		if ( class_exists( 'FrmAddon' ) ) {
-			include_once( dirname( __FILE__ ) . '/FrmCptFPUpdate.php' );
-			FrmCptFPUpdate::load_hooks();
-		} else {
 			include_once( dirname( __FILE__ ) . '/FrmCptUpdate.php' );
-			new FrmCptUpdate();
+			FrmCptUpdate::load_hooks();
 		}
 	}
 
