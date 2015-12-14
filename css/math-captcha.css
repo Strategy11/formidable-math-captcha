@@ -1,0 +1,7 @@
+.cptch_img {
+    width: 40px;
+    max-width: 40px !important;
+    height: auto;
+    top: 0;
+    z-index: 2;
+}

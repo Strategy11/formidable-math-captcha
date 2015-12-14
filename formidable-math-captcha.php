@@ -167,6 +167,8 @@ class FrmCptController {
 	 * @param boolean $cptch_error
 	 */
 	private static function show_cptch_field( $form, $errors, $cptch_error ) {
+		wp_enqueue_style( 'math_cptch_stylesheet', plugins_url( 'css/math-captcha.css', __FILE__ ) );
+
 		// captcha html
 		$classes = apply_filters( 'frm_cpt_field_classes', array( 'form-field', 'frm_top_container', 'auto_width' ), $form );
 		if ( $cptch_error ) {
@@ -182,9 +184,9 @@ class FrmCptController {
 		}
 
 		if ( function_exists( 'cptch_display_captcha' ) ) {
-			cptch_display_captcha();
+			echo cptch_display_captcha();
 		} else if ( function_exists( 'cptchpr_display_captcha' ) ) {
-			cptchpr_display_captcha();
+			echo cptchpr_display_captcha();
 		} else {
 			return;
 		}
