@@ -5,6 +5,9 @@ Tested up to: 4.3
 Stable tag: 1.11
 
 == Changelog ==
+= 1.12 =
+* Make sure captcha shows up on forms with BWS 4.1.6
+
 = 1.11 =
 * Get updates from FormidablePros.com
 * Move code into class
