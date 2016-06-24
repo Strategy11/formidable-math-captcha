@@ -3,6 +3,7 @@
 class FrmCptUpdate extends FrmAddon {
 	public $plugin_file;
 	public $plugin_name = 'Math Captcha';
+	public $download_id = 163255;
 	public $version = '1.12';
 
 	public function __construct() {
