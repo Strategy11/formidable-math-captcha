@@ -132,7 +132,7 @@ class FrmCptController {
 
 		//skip if there are more pages for this form
 		$more_pages = self::more_form_pages( $form->id );
-		if ( $cptch_error || $more_pages ) {
+		if ( $more_pages ) {
 			wp_nonce_field( 'frmcptch-nonce', 'frmcptch' );
 			return;
 		}
@@ -150,7 +150,8 @@ class FrmCptController {
 		}
 		unset( $opt );
 
-		self::show_cptch_field( $form, $errors, $cptch_error );
+		$error_message = $cptch_error ? $errors['cptch_number'] : false;
+		self::show_cptch_field( $form, $error_message );
 
 		global $cptch_options;
 		if ( ! isset( $cptch_options['cptch_str_key'] ) ) {
@@ -163,10 +164,9 @@ class FrmCptController {
 	 * The HTML for the captcha
 	 *
 	 * @param object $form
-	 * @param array $errors
-	 * @param boolean $cptch_error
+	 * @param string $cptch_error
 	 */
-	private static function show_cptch_field( $form, $errors, $cptch_error ) {
+	private static function show_cptch_field( $form, $cptch_error ) {
 		wp_enqueue_style( 'math_cptch_stylesheet', plugins_url( 'css/math-captcha.css', __FILE__ ) );
 
 		// captcha html
@@ -192,7 +192,7 @@ class FrmCptController {
 		}
 
 		if ( $cptch_error ) {
-			echo '<div class="frm_error">' . esc_html( $errors['cptch_number'] ) . '</div>';
+			echo '<div class="frm_error">' . esc_html( $cptch_error ) . '</div>';
 		}
 
 		echo '</div>';
