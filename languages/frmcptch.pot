@@ -1,31 +1,36 @@
+# Loco Gettext template
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Math Captcha v1.11\n"
+"Project-Id-Version: Formidable Math Captcha v1.13\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: Tue Aug 16 2016 10:59:13 GMT-0700 (PDT)\n"
+"POT-Revision-Date: Tue Aug 16 2016 10:57:49 GMT-0700 (PDT)\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: jamie <jamie@formidablepro.com>\n"
 "Language-Team: \n"
-"Language: Polish\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10 >= 2 && n%10<=4 "
-"&&(n%100<10||n%100 >= 20)? 1 : 2)\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Loco - https://localise.biz/\n"
-"X-Poedit-Language: \n"
-"X-Poedit-Country: \n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
 "__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
 "_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
-"X-Poedit-Basepath: .\n"
+"X-Poedit-Basepath: \n"
 "X-Poedit-Bookmarks: \n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Textdomain-Support: yes\n"
-"X-Loco-Target-Locale: pl_PL"
+"X-Textdomain-Support: yes"
+
+#: ../controllers/FrmCptController.php:68 ../controllers/FrmCptController.php:114
+msgid "You are missing the BWS Captcha plugin"
+msgstr ""
 
 #: ../controllers/FrmCptController.php:72
 msgid "Do not include the math captcha with this form."
@@ -35,6 +40,14 @@ msgstr ""
 msgid "The captcha is missing from your form."
 msgstr ""
 
+#: ../controllers/FrmCptController.php:190
+msgid "Please complete the CAPTCHA."
+msgstr ""
+
+#: ../controllers/FrmCptController.php:193
+msgid "That CAPTCHA was incorrect."
+msgstr ""
+
 #. Name of the plugin
 msgid "Formidable Math Captcha"
 msgstr ""
@@ -42,15 +55,3 @@ msgstr ""
 #. Description of the plugin
 msgid "Extends Captcha by BestWebSoft to work with Formidable Forms"
 msgstr ""
-
-#: ../controllers/FrmCptController.php:68 ../controllers/FrmCptController.php:114
-msgid "You are missing the BWS Captcha plugin"
-msgstr "Nie zainstalowano wtyczki BWS Captcha"
-
-#: ../controllers/FrmCptController.php:190
-msgid "Please complete the CAPTCHA."
-msgstr "Proszę uzupełnić to pole"
-
-#: ../controllers/FrmCptController.php:193
-msgid "That CAPTCHA was incorrect."
-msgstr "Wpisano nieprawidłową wartość."
