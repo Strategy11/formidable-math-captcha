@@ -1,10 +1,14 @@
 === Formidable Forms ===
-Requires at least: 3.6
+Requires at least: 3.8
 Requires at least Captcha: 4.0.5
-Tested up to: 4.3
-Stable tag: 1.11
+Tested up to: 4.6
+Stable tag: 1.13
 
 == Changelog ==
+= 1.13 =
+* Make sure captcha works with BWS 4.2.3
+* Fix captcha with alternate submits
+
 = 1.12 =
 * Make sure captcha shows up on forms with BWS 4.1.6
 
