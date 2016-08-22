@@ -14,7 +14,18 @@ class FrmCptController {
 	}
 
 	/**
-	 * Add the Formidable checkbox option in captcha v4.0.5 - 4.2.3 settings
+	 * For Captcha >= v4.2.3
+	 */
+	public static function add_option_tab( $tabs ) {
+		remove_filter( 'cptch_forms_list', 'FrmCptController::add_option' );
+		remove_action( 'admin_head', 'FrmCptController::save_cptch_opt' );
+
+		$tabs['formidable'] = array( 'Formidable', '' );
+		return $tabs;
+	}
+
+	/**
+	 * Add the Formidable checkbox option in captcha v4.0.5 - 4.2.2 settings
 	 */
 	public static function add_option( $options ) {
 		$cptch_options = get_option( 'cptch_options' );
@@ -30,6 +41,7 @@ class FrmCptController {
 	/**
 	 * Checks if this is the captcha settings page, and if the settings need to be saved
 	 * Called on the admin_head hook.
+	 * < v4.2.3
 	 */
 	public static function save_cptch_opt() {
 		if ( ! self::is_captcha_page() ) {
@@ -38,7 +50,7 @@ class FrmCptController {
 
 		//save captcha
 		if ( isset( $_REQUEST[ 'cptch_form_submit' ] ) ) {
-			$cptch_options = self::get_bws_captcha_options();
+			global $cptch_options;
 			$frm_form = isset( $_REQUEST[ 'cptch_frm_form' ] );
 			if ( $cptch_options ) {
 				$cptch_options[ 'cptch_frm_form' ] = $frm_form;
@@ -283,8 +295,26 @@ class FrmCptController {
 	 */
 	private static function skip_captcha() {
 		$cptch_options = self::get_bws_captcha_options();
-		$hide_from_registered = isset( $cptch_options[ 'cptch_hide_register' ] ) && $cptch_options[ 'cptch_hide_register' ] ? true : false;
-		return ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_user_logged_in() && $hide_from_registered ) || ( ! isset( $cptch_options[ 'cptch_frm_form' ] ) || ! $cptch_options[ 'cptch_frm_form' ] );
+		if ( self::is_v433( $cptch_options ) ) {
+			$hide_from_registered = isset( $cptch_options['forms']['wp_comments']['hide_from_registered'] ) && $cptch_options['forms']['wp_comments']['hide_from_registered'];
+		} else {
+			$hide_from_registered = isset( $cptch_options[ 'cptch_hide_register' ] ) && $cptch_options[ 'cptch_hide_register' ];
+		}
+		return ( is_admin() && ! defined( 'DOING_AJAX' ) ) || ( is_user_logged_in() && $hide_from_registered ) || ( ! self::is_enabled() );
+	}
+
+	private static function is_enabled() {
+		$cptch_options = self::get_bws_captcha_options();
+		if ( self::is_v433( $cptch_options ) ) {
+			$enabled = $cptch_options['forms']['formidable']['enable'];
+		} else {
+			$enabled = ( isset( $cptch_options[ 'cptch_frm_form' ] ) && $cptch_options[ 'cptch_frm_form' ] );
+		}
+		return $enabled;
+	}
+
+	private static function is_v433( $cptch_options ) {
+		return isset( $cptch_options['forms'] ) && isset( $cptch_options['forms']['formidable'] );
 	}
 
 	private static function get_bws_captcha_options() {

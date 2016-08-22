@@ -24,6 +24,9 @@ class FrmCptHooksController{
 		// Necessary prior to BWS Captcha version 4.2.3
 		add_filter( 'cptch_forms_list', 'FrmCptController::add_option' );
 
+		// for >= v4.2.3
+		add_filter( 'cptch_add_form', 'FrmCptController::add_option_tab' );
+
 		add_action( 'frm_additional_form_options', 'FrmCptController::add_cptch_form_opt', 50 );
 		add_filter( 'frm_form_options_before_update', 'FrmCptController::update_cptch_form_options', 20, 2 );
 	}
