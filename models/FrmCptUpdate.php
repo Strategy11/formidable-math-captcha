@@ -4,7 +4,7 @@ class FrmCptUpdate extends FrmAddon {
 	public $plugin_file;
 	public $plugin_name = 'Math Captcha';
 	public $download_id = 163255;
-	public $version = '1.13';
+	public $version = '1.14';
 
 	public function __construct() {
 		$this->plugin_file = dirname( __FILE__ ) . '/formidable-math-captcha.php';

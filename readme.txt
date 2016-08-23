@@ -2,9 +2,13 @@
 Requires at least: 3.8
 Requires at least Captcha: 4.0.5
 Tested up to: 4.6
-Stable tag: 1.13
+Stable tag: 1.14
 
 == Changelog ==
+= 1.14 =
+* Make sure Formidable options are saved on BWS Captcha page
+* Allow captcha to be hidden for logged-in users
+
 = 1.13 =
 * Make sure captcha works with BWS 4.2.3
 * Fix captcha with alternate submits
