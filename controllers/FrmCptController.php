@@ -162,9 +162,9 @@ class FrmCptController {
 		echo '<div id="frm_field_cptch_number_container" class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
 		$cptch_options = self::get_bws_captcha_options();
-		if ( ! empty( $cptch_options[ 'cptch_label_form' ] ) ) {
-			echo '<label class="frm_primary_label">' . wp_kses_post( $cptch_options[ 'cptch_label_form' ] );
-			echo ' <span class="frm_required">' . wp_kses_post( $cptch_options[ 'cptch_required_symbol' ] ) . '</span>';
+		if ( ! empty( $cptch_options['title'] ) ) {
+			echo '<label class="frm_primary_label">' . esc_html( $cptch_options['title'] );
+			echo ' <span class="frm_required">' . esc_html( $cptch_options['required_symbol'] ) . '</span>';
 			echo '</label>';
 		}
 
