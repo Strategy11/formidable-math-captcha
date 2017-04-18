@@ -1,12 +1,12 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Math Captcha v1.14\n"
+"Project-Id-Version: Formidable Math Captcha v1.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-23 20:08+0000\n"
-"PO-Revision-Date: 2016-08-23 20:08+0000\n"
+"POT-Creation-Date: 2016-08-23 20:04+0000\n"
+"PO-Revision-Date: Tue Apr 18 2017 13:18:41 GMT-0700 (PDT)\n"
 "Last-Translator: \n"
-"Language-Team: Catalan\n"
-"Language: ca\n"
+"Language-Team: \n"
+"Language: Catalan\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Loco-Target-Locale: ca_ES"
 
-#: controllers/FrmCptController.php:198
+#: ../controllers/FrmCptController.php:203
 msgid "The captcha is missing from your form."
 msgstr ""
 
@@ -36,21 +36,21 @@ msgid "Extends Captcha by BestWebSoft to work with Formidable Forms"
 msgstr ""
 
 # @ cptch
-#: controllers/FrmCptController.php:80 controllers/FrmCptController.php:126
+#: ../controllers/FrmCptController.php:80 ../controllers/FrmCptController.php:126
 msgid "You are missing the BWS Captcha plugin"
 msgstr "You are missing the BWS Captcha plugin"
 
 # @ cptch
-#: controllers/FrmCptController.php:84
+#: ../controllers/FrmCptController.php:84
 msgid "Do not include the math captcha with this form."
 msgstr "Captcha no és vàlid."
 
 # @ cptch
-#: controllers/FrmCptController.php:202
+#: ../controllers/FrmCptController.php:207
 msgid "Please complete the CAPTCHA."
 msgstr "CAPTCHA no és vàlid."
 
 # @ cptch
-#: controllers/FrmCptController.php:205
+#: ../controllers/FrmCptController.php:210
 msgid "That CAPTCHA was incorrect."
 msgstr "CAPTCHA no és vàlid."

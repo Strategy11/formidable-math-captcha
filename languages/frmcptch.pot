@@ -1,10 +1,11 @@
+# Loco Gettext template
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Math Captcha v1.14\n"
+"Project-Id-Version: Formidable Math Captcha v1.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-23 20:04+0000\n"
-"POT-Revision-Date: Tue Aug 23 2016 10:57:49 GMT-0700 (PDT)\n"
+"POT-Revision-Date: Tue Apr 18 2017 13:17:41 GMT-0700 (PDT)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -27,23 +28,23 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: controllers/FrmCptController.php:80 controllers/FrmCptController.php:126
+#: ../controllers/FrmCptController.php:80 ../controllers/FrmCptController.php:126
 msgid "You are missing the BWS Captcha plugin"
 msgstr ""
 
-#: controllers/FrmCptController.php:84
+#: ../controllers/FrmCptController.php:84
 msgid "Do not include the math captcha with this form."
 msgstr ""
 
-#: controllers/FrmCptController.php:198
+#: ../controllers/FrmCptController.php:203
 msgid "The captcha is missing from your form."
 msgstr ""
 
-#: controllers/FrmCptController.php:202
+#: ../controllers/FrmCptController.php:207
 msgid "Please complete the CAPTCHA."
 msgstr ""
 
-#: controllers/FrmCptController.php:205
+#: ../controllers/FrmCptController.php:210
 msgid "That CAPTCHA was incorrect."
 msgstr ""
 
