@@ -64,7 +64,7 @@ class FrmCptController {
 			$cptch_options = get_option( 'cptch_options' ); // get options from the database
 			if ( ! isset( $cptch_options[ 'cptch_frm_form' ] ) || $cptch_options[ 'cptch_frm_form' ] == '' ) {
 				$cptch_options[ 'cptch_frm_form' ] = 0;
-				$cptch_options = update_option( 'cptch_options', $cptch_options ); // save options
+				update_option( 'cptch_options', $cptch_options ); // save options
 			}
 		}
 	}
@@ -162,9 +162,14 @@ class FrmCptController {
 		echo '<div id="frm_field_cptch_number_container" class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
 		$cptch_options = self::get_bws_captcha_options();
-		if ( ! empty( $cptch_options['title'] ) ) {
+
+		if ( isset( $cptch_options['title'] ) && ! empty( $cptch_options['title'] ) ) {
 			echo '<label class="frm_primary_label">' . esc_html( $cptch_options['title'] );
 			echo ' <span class="frm_required">' . esc_html( $cptch_options['required_symbol'] ) . '</span>';
+			echo '</label>';
+		} else if ( isset( $cptch_options['cptch_label_form'] ) && ! empty( $cptch_options['cptch_label_form'] ) ) {
+			echo '<label class="frm_primary_label">' . esc_html( $cptch_options['cptch_label_form'] );
+			echo ' <span class="frm_required">' . esc_html( $cptch_options['cptch_required_symbol'] ) . '</span>';
 			echo '</label>';
 		}
 

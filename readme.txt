@@ -1,10 +1,14 @@
 === Formidable Forms ===
 Requires at least: 3.8
 Requires at least Captcha: 4.0.5
-Tested up to: 4.6
-Stable tag: 1.14
+Tested up to: 4.7.3
+Stable tag: 1.15
 
 == Changelog ==
+= 1.15 =
+* Fix: Make sure auto updating works properly
+* Fix: Get field title from new BWS Captcha setting
+
 = 1.14 =
 * Make sure Formidable options are saved on BWS Captcha page
 * Allow captcha to be hidden for logged-in users

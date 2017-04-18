@@ -2,8 +2,8 @@
 /*
 Plugin Name: Formidable Math Captcha
 Description: Extends Captcha by BestWebSoft to work with Formidable Forms
-Version: 1.14
-Plugin URI: http://formidablepro.com/
+Version: 1.15
+Plugin URI: http://formidableforms.com/
 Author URI: http://strategy11.com
 Author: Strategy11
 Text Domain: frmcptch
